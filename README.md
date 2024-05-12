@@ -6,5 +6,5 @@ ESPHome firmware installer :
 - english : https://esphome-intexsbh20.piitaya.fr/en
 
 ## Credits
-
-Original projet: https://github.com/jnsbyr/esp8266-intexsbh20
+forked from: https://github.com/piitaya/esphome-intexsbh20
+Original project: https://github.com/jnsbyr/esp8266-intexsbh20
