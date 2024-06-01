@@ -240,6 +240,26 @@ int SBH20IO::getTargetTemperature() const
   return (state.targetTemperature != UNDEF::USHORT) ? convertDisplayToCelsius(state.targetTemperature) : UNDEF::USHORT;
 }
 
+int SBH20IO::getTargetTemperatureEx() 
+{
+  int  tt = getTargetTemperature();
+  if (tt == UNDEF::USHORT) {
+    if (isPowerOn() == true) {
+      pressButton(buttons.toggleTempDown);
+      int i = 0;
+      while (tt == UNDEF::USHORT) {
+        if (i++ >20) {
+          break;
+        }
+        delay(200);
+        tt = getTargetTemperature();
+      }
+    } else { 
+      tt = getCurrentTemperature();
+    }
+  }
+  return tt;}
+
 void SBH20IO::forceReadTargetTemperature()
 {
   changeTargetTemperature(-1);
@@ -428,10 +448,34 @@ void SBH20IO::setFilterOn(bool on)
   }
 }
 
+void SBH20IO::setFilterOnEx(bool on)
+{
+  if (on ^ (isFilterOn() == true))
+  {
+    if (on && isPowerOn() != true) {
+      setPowerOn(true);
+      delay(1000);
+    }
+    pressButton(buttons.toggleFilter);
+  }
+}
+
 void SBH20IO::setHeaterOn(bool on)
 {
   if (on ^ (isHeaterOn() == true || isHeaterStandby() == true))
   {
+    pressButton(buttons.toggleHeater);
+  }
+}
+
+void SBH20IO::setHeaterOnEx(bool on)
+{
+  if (on ^ (isHeaterOn() == true || isHeaterStandby() == true))
+  {
+    if (on && isPowerOn() != true) {
+      setPowerOn(true);
+      delay(400);
+    } 
     pressButton(buttons.toggleHeater);
   }
 }

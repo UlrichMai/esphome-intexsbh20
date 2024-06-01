@@ -152,6 +152,7 @@ public:
 
   int getCurrentTemperature() const;
   int getTargetTemperature() const;
+  int getTargetTemperatureEx() ;
   void forceReadTargetTemperature();
 
   uint8_t isBubbleOn() const;
@@ -165,7 +166,9 @@ public:
 
   void setBubbleOn(bool on);
   void setFilterOn(bool on);
+  void setFilterOnEx(bool on);
   void setHeaterOn(bool on);
+  void setHeaterOnEx(bool on);
   void setPowerOn(bool on);
 
   unsigned int getErrorValue() const;

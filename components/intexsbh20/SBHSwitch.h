@@ -28,7 +28,7 @@ public:
 		}
 		else if (strcmp(type_, "filter") == 0)
 		{
-			get_parent()->sbh()->setFilterOn(state);
+			get_parent()->sbh()->setFilterOnEx(state);
 		}
 		else if (strcmp(type_, "power") == 0)
 		{
