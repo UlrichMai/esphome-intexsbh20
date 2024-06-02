@@ -39,12 +39,17 @@ button:
   - platform: safe_mode
     name: Safe Mode Boot
     entity_category: diagnostic 
+  - platform: restart
+    name: Restart
+    entity_category: diagnostic 
     
 climate:
 
 switch:
 
 text_sensor:
+
+binary_sensor:
 
 intexsbh20:
   climate:
@@ -53,9 +58,11 @@ intexsbh20:
   power:
     name: Power
     icon: mdi:power
+    entity_category: diagnostic
   filter:
     name: Filter
     icon: mdi:air-filter
+    entity_category: diagnostic
   bubble:
     name: Bubble
     icon: mdi:chart-bubble
