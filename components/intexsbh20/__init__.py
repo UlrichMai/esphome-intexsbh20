@@ -1,9 +1,9 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
-from esphome.components import climate, sensor, switch, text_sensor
+from esphome.components import climate, sensor, binary_sensor, switch, text_sensor
 from esphome.const import CONF_ID
 
-DEPENDENCIES = ['climate', 'sensor', 'switch', 'text_sensor']
+DEPENDENCIES = ['climate', 'sensor', 'binary_sensor', 'switch', 'text_sensor']
 
 AUTO_LOAD = []
 
@@ -25,16 +25,12 @@ CONFIG_SCHEMA = cv.polling_component_schema('5s').extend({
 	cv.Optional(CONF_CLIMATE): climate.CLIMATE_SCHEMA.extend({
 		cv.GenerateID(): cv.declare_id(SBHClimate),
 	}),
-	cv.Optional(CONF_POWER): switch.SWITCH_SCHEMA.extend({
-		cv.GenerateID(): cv.declare_id(SBHSwitch),
-	}),
-	cv.Optional(CONF_FILTER): switch.SWITCH_SCHEMA.extend({
-		cv.GenerateID(): cv.declare_id(SBHSwitch),
-	}),
 	cv.Optional(CONF_BUBBLE): switch.SWITCH_SCHEMA.extend({
 		cv.GenerateID(): cv.declare_id(SBHSwitch),
 	}),
 	cv.Optional(CONF_WATER_TEMPERATURE): sensor.sensor_schema().extend(),
+	cv.Optional(CONF_POWER): binary_sensor.binary_sensor_schema().extend(),
+	cv.Optional(CONF_FILTER): binary_sensor.binary_sensor_schema().extend(),
 	cv.Optional(CONF_ERROR_TEXT): text_sensor.text_sensor_schema().extend(),
 })
 
@@ -48,16 +44,12 @@ async def to_code(config):
 		cg.add(var.set_climate(clim))
 
 	if CONF_POWER in config:
-		sw = cg.new_Pvariable(config[CONF_POWER][CONF_ID])
-		await switch.register_switch(sw, config[CONF_POWER])
-		cg.add(sw.set_type("power"))
-		cg.add(var.set_switch_power(sw))
+		tx = await binary_sensor.new_binary_sensor(config[CONF_POWER])
+		cg.add(var.set_switch_power(tx))
 
 	if CONF_FILTER in config:
-		sw = cg.new_Pvariable(config[CONF_FILTER][CONF_ID])
-		await switch.register_switch(sw, config[CONF_FILTER])
-		cg.add(sw.set_type("filter"))
-		cg.add(var.set_switch_filter(sw))
+		tx = await binary_sensor.new_binary_sensor(config[CONF_FILTER])
+		cg.add(var.set_switch_filter(tx))
 
 	if CONF_BUBBLE in config:
 		sw = cg.new_Pvariable(config[CONF_BUBBLE][CONF_ID])
