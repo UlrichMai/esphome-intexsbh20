@@ -53,7 +53,7 @@ namespace PIN
 #endif
 
 // time delta with overflow support
-static unsigned long timeDiff(unsigned long newTime, unsigned long oldTime)
+static inline unsigned long timeDiff(unsigned long newTime, unsigned long oldTime)
 {
   if (newTime >= oldTime)
   {
@@ -66,7 +66,7 @@ static unsigned long timeDiff(unsigned long newTime, unsigned long oldTime)
 }
 
 // unsigned int delta with overflow support
-static unsigned long diff(unsigned int newVal, unsigned int oldVal)
+static inline unsigned long diff(unsigned int newVal, unsigned int oldVal)
 {
   if (newVal >= oldVal)
   {
@@ -77,5 +77,6 @@ static unsigned long diff(unsigned int newVal, unsigned int oldVal)
     return UINT_MAX - oldVal + newVal + 1;
   }
 }
+
 
 #endif /* COMMON_H */
