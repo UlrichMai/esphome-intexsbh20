@@ -40,9 +40,9 @@ enum class LANG
 // ESP8266 pins
 namespace PIN
 {
-  const uint8_t CLOCK = 14;
-  const uint8_t DATA  = 12;
-  const uint8_t LATCH = 13;
+  const uint8_t CLOCK = 14; //D5
+  const uint8_t DATA  = 12; //D6
+  const uint8_t LATCH = 13; //D7
 }
 
 // serial debugging
