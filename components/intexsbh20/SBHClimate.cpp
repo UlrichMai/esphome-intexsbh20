@@ -76,8 +76,6 @@ esphome::climate::ClimateTraits SBHClimate::traits()
 	rv.set_visual_min_temperature(SBH20IO::WATER_TEMP::SET_MIN);
 	rv.set_visual_max_temperature(SBH20IO::WATER_TEMP::SET_MAX);
 	rv.set_visual_temperature_step(1);
-	rv.set_supports_current_temperature(true);
-	rv.set_supports_action(true);
 	rv.set_supported_modes(
 		{climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_FAN_ONLY});
 

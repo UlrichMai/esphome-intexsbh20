@@ -22,10 +22,10 @@ SBHSwitch = sbh_ns.class_('SBHSwitch', switch.Switch)
 
 CONFIG_SCHEMA = cv.polling_component_schema('5s').extend({
 	cv.GenerateID(): cv.declare_id(IntexSBH20),
-	cv.Optional(CONF_CLIMATE): climate.CLIMATE_SCHEMA.extend({
+	cv.Optional(CONF_CLIMATE): climate.climate_schema(SBHClimate).extend({
 		cv.GenerateID(): cv.declare_id(SBHClimate),
 	}),
-	cv.Optional(CONF_BUBBLE): switch.SWITCH_SCHEMA.extend({
+	cv.Optional(CONF_BUBBLE): switch.switch_schema(SBHSwitch).extend({
 		cv.GenerateID(): cv.declare_id(SBHSwitch),
 	}),
 	cv.Optional(CONF_WATER_TEMPERATURE): sensor.sensor_schema().extend(),
