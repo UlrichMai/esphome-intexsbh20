@@ -1,2 +1,3 @@
 secrets.yaml
 .esphome/
+components/intexsbh20/__pycache__/

@@ -26,11 +26,11 @@ void SBHClimate::update()
     else
       this->mode = esphome::climate::CLIMATE_MODE_OFF;
 
-	this->current_temperature = sbh->getCurrentTemperature();
+	int currentTemp = sbh->getCurrentTemperature();
+	this->current_temperature = (currentTemp != SBH20IO::UNDEF::USHORT) ? currentTemp : NAN;
 
 	int targetTemp = sbh->getTargetTemperature();
-
-	this->target_temperature = (targetTemp != SBH20IO::UNDEF::USHORT) ? targetTemp : SBH20IO::WATER_TEMP::SET_MIN;
+	this->target_temperature = (targetTemp != SBH20IO::UNDEF::USHORT) ? targetTemp : NAN;
 
 	if (targetTemp == SBH20IO::UNDEF::USHORT)
 	{
@@ -76,6 +76,7 @@ esphome::climate::ClimateTraits SBHClimate::traits()
 	rv.set_visual_min_temperature(SBH20IO::WATER_TEMP::SET_MIN);
 	rv.set_visual_max_temperature(SBH20IO::WATER_TEMP::SET_MAX);
 	rv.set_visual_temperature_step(1);
+	rv.set_feature_flags(climate::CLIMATE_SUPPORTS_CURRENT_TEMPERATURE | climate::CLIMATE_SUPPORTS_ACTION);
 	rv.set_supported_modes(
 		{climate::CLIMATE_MODE_OFF, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_FAN_ONLY});
 

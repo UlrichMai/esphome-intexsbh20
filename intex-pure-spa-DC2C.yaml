@@ -1,6 +1,14 @@
+substitutions:
+  name: "intex-pure-spa-dc2c"
+  friendly_name: "Intex Pure Spa SSP-H20 DC2C"
+
 esphome:
-  name: intex-pure-spa
-  friendly_name: Intex Pure Spa
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  #name_add_mac_suffix: true
+  project:
+    name: UlrichMai.esphome-intex-pure-spa1
+    version: "1.0"
   platformio_options:
     board_build.f_cpu: 160000000L
 
@@ -8,6 +16,8 @@ esp8266:
   board: d1_mini
 
 external_components:
+#  - source: github://UlrichMai/esphome-intexsbh20
+#    components: [intexsbh20]
   - source:
       type: local
       path: components
@@ -22,6 +32,9 @@ ota:
   platform: esphome
   password: !secret ota_password
 
+#dashboard_import:
+#  package_import_url: github://UlrichMai/esphome-intexsbh20/intex-pure-spa.yaml@main
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
@@ -30,6 +43,11 @@ wifi:
     password: !secret wifi_ap_password
 
 captive_portal:
+
+status_led:
+  pin:
+    number: D4
+    inverted: true  
 
 sensor:
   - platform: wifi_signal
@@ -49,9 +67,9 @@ climate:
 
 switch:
 
-text_sensor:
-
 binary_sensor:
+
+text_sensor:
 
 intexsbh20:
   climate:
@@ -60,11 +78,11 @@ intexsbh20:
   power:
     name: Power
     icon: mdi:power
-    entity_category: diagnostic
+    entity_category: diagnostic    
   filter:
     name: Filter
     icon: mdi:air-filter
-    entity_category: diagnostic
+    entity_category: diagnostic    
   bubble:
     name: Bubble
     icon: mdi:chart-bubble
@@ -75,6 +93,12 @@ intexsbh20:
     state_class: measurement
     accuracy_decimals: 0
     unit_of_measurement: °C
+    filters: 
+    - clamp:
+        min_value: 10
+        max_value: 50
+        ignore_out_of_range: true
+
   error_text:
     name: Error
     icon: mdi:alert-circle

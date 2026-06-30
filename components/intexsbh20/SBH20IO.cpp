@@ -27,6 +27,21 @@
  */
 
 #include "SBH20IO.h"
+#include <eagle_soc.h>
+#include <esp8266_peri.h>
+
+extern "C" void ets_delay_us(uint32_t us);
+
+static inline void IRAM_ATTR setDataOutputLow()
+{
+  SET_PERI_REG_MASK(PERIPHS_GPIO_BASEADDR + GPIO_OUT_W1TC_ADDRESS, (1 << PIN::DATA));
+  SET_PERI_REG_MASK(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TS_ADDRESS, (1 << PIN::DATA));
+}
+
+static inline void IRAM_ATTR setDataInput()
+{
+  SET_PERI_REG_MASK(PERIPHS_GPIO_BASEADDR + GPIO_ENABLE_W1TC_ADDRESS, (1 << PIN::DATA));
+}
 
 // bit mask for LEDs
 namespace FRAME_LED
@@ -195,7 +210,7 @@ void SBH20IO::setup(LANG language)
   pinMode(PIN::DATA, INPUT);
   pinMode(PIN::LATCH, INPUT);
 
-  attachInterruptArg(digitalPinToInterrupt(PIN::LATCH), SBH20IO::latchFallingISR, this, FALLING);
+  attachInterruptArg(digitalPinToInterrupt(PIN::LATCH), SBH20IO::latchRisingISR, this, RISING);
   attachInterruptArg(digitalPinToInterrupt(PIN::CLOCK), SBH20IO::clockRisingISR, this, RISING);
 }
 
@@ -581,9 +596,15 @@ uint16_t SBH20IO::convertDisplayToCelsius(uint16_t value) const
   return (celsiusValue >= 0) && (celsiusValue <= 60) ? celsiusValue : UNDEF::USHORT;
 }
 
-void IRAM_ATTR SBH20IO::latchFallingISR(void *arg)
+void IRAM_ATTR SBH20IO::latchRisingISR(void *arg)
 {
-  pinMode(PIN::DATA, INPUT);
+  if (state.reply)
+  {
+    state.reply = false;
+    setDataOutputLow();
+    ets_delay_us(2);
+    setDataInput();
+  }
 }
 
 void IRAM_ATTR SBH20IO::clockRisingISR(void *arg)
@@ -872,6 +893,6 @@ inline void IRAM_ATTR SBH20IO::decodeButton(uint16_t frame)
 
   if (reply)
   {
-    pinMode(PIN::DATA, OUTPUT);
+    state.reply = true;
   }
 }

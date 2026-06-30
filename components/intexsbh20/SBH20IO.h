@@ -228,6 +228,7 @@ private:
 
     unsigned int frameCounter = 0;
     unsigned int frameDropped = 0;
+    bool reply = false;
   };
 
   struct Buttons
@@ -242,7 +243,7 @@ private:
 
 private:
   // ISR and ISR helper
-  static void IRAM_ATTR latchFallingISR(void *arg);
+  static void IRAM_ATTR latchRisingISR(void *arg);
   static void IRAM_ATTR clockRisingISR(void *arg);
   static inline uint8_t IRAM_ATTR BCD(uint16_t value);
   static inline void IRAM_ATTR decodeDisplay(uint16_t frame);
